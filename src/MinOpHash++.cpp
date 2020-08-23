@@ -178,14 +178,14 @@ int main(int argc, char **argv) {
 //	testIsPrime(randgen);
 
 	unordered_map<string, edge_t> map;
-	loadJSON(map, "words-google-10000-english.json");
-//	loadJSON(map, "words-linux.json");
-//	loadJSON(map, "words-utf16.json");
-//	loadJSON(map, "words-small.json");
-//	loadJSON(map, "words-small0.json");
-//	loadJSON(map, "words-small1.json");
-//	loadJSON(map, "words-small2.json");
-//	loadJSON(map, "words-small3.json");
+	loadJSON(map, "tests/words-google-10000-english.json");
+//	loadJSON(map, "tests/words-linux.json");
+//	loadJSON(map, "tests/words-utf16.json");
+//	loadJSON(map, "tests/words-small.json");
+//	loadJSON(map, "tests/words-small0.json");
+//	loadJSON(map, "tests/words-small1.json");
+//	loadJSON(map, "tests/words-small2.json");
+//	loadJSON(map, "tests/words-small3.json");
 
 	//TODO zero characters in strings should not be allowed
 
