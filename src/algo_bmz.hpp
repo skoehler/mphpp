@@ -43,6 +43,7 @@ private:
 			(void)edgeval;
 			size_t d = g.degree(c);
 			if (d <= 2) {
+				// FIXME this idea is broken, nodes in a tree have degree 3 or more!
 				// only consider nodes with degree 2 (inner nodes) or 1 (leaves)
 				nonCoreEdgesTimes2 += d;
 				core[c] = false;
