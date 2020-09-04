@@ -7,9 +7,9 @@ project (MinOpHash++)
 set( CMAKE_VERBOSE_MAKEFILE on )
 
 set( CMAKE_C_STANDARD 99 )
-#set( CMAKE_C_EXTENSIONS OFF )
-set( CMAKE_CXX_STANDARD 14 )
-#set( CMAKE_CXX_EXTENSIONS OFF )
+set( CMAKE_C_EXTENSIONS OFF )
+set( CMAKE_CXX_STANDARD 17 )
+set( CMAKE_CXX_EXTENSIONS OFF )
 
 
 add_compile_options( -Wall -Wextra -Wconversion )

@@ -27,6 +27,21 @@ public:
 
 
 
+class PreNone : public Preprocessor {
+public:
+	PreNone() {
+		// nothing
+	}
+
+	uint32_t preprocess(size_t i, char c) override {
+		return (unsigned char)c;
+	}
+
+	void randomize() override {
+		// nothing
+	}
+};
+
 class PreMult : public Preprocessor {
 private:
 	const size_t n;
@@ -114,4 +129,35 @@ public:
 };
 
 
+class HashJenkinsOneAtATime : public HashFunc {
+private:
+	// https://en.wikipedia.org/wiki/Jenkins_hash_function
+	Preprocessor &p;
+	RandSource &rseed;
+	uint32_t seed = 0;
 
+public:
+	HashJenkinsOneAtATime(Preprocessor &p, RandSource &rseed) : p(p), rseed(rseed) {
+		// nothing
+	}
+
+	uint32_t hash(const std::string &s) {
+		size_t len = s.length();
+		uint32_t hash = seed;
+		for (size_t i=0; i<len; i++) {
+			hash += p.preprocess(i, s[i]);
+			hash += hash << 10;
+			hash ^= hash >> 6;
+		}
+		// also hash length ?
+		// hash += len;
+		hash += hash << 3;
+		hash ^= hash >> 11;
+		hash += hash << 15;
+		return hash;
+	}
+
+	void randomize() override {
+		seed = rseed.get();
+	}
+};

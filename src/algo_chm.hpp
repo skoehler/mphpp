@@ -53,9 +53,6 @@ public:
 	bool run(randgen_t &randgen, const map_t &map,
 			size_t maxlen, uint32_t n, size_t trials) {
 
-		Graph g(n);
-		UnionFind uf(n);
-
 		// use factors that are a power of 2 plus/minus 1
 		// this means the compiler can implement it with
 		// a shift and an addition/subtration.
@@ -89,37 +86,40 @@ public:
 //		HashMultSum hf1(pre1, rs1_n, rsFactor);
 //		HashMultSum hf2(pre2, rs1_n, rsFactor);
 
+		{
+			UnionFind uf(n);
+			bool runagain = true;
+			for (size_t i=0; runagain && i<trials; i++) {
+				pre1.randomize();
+				pre2.randomize();
+				hf1.randomize();
+				hf2.randomize();
+				uf.clear();
 
-		bool runagain = true;
-		for (size_t i=0; runagain && i<trials; i++) {
-			pre1.randomize();
-			pre2.randomize();
-			hf1.randomize();
-			hf2.randomize();
-			uf.clear();
-			g.clear();
-
-			runagain = false;
-			for (auto &x : map) {
-				const string &key = x.first;
-				uint32_t h1 = hf1.hash(key) % n;
-				uint32_t h2 = hf2.hash(key) % n;
-//				if (h2 == h1) {
-//					h2 = (h2 * 2 + 1) % n;
-//				}
-
-				bool circle = uf.doUnion(h1, h2);
-				if (circle) {
-					// loop or cycle detected
-					runagain = true;
-					break;
+				runagain = false;
+				for (auto &x : map) {
+					const string &key = x.first;
+					uint32_t h1 = hf1.hash(key) % n;
+					uint32_t h2 = hf2.hash(key) % n;
+					bool circle = uf.doUnion(h1, h2);
+					if (circle) {
+						// cycle, parallel, or loop detected
+						runagain = true;
+						break;
+					}
 				}
-				g.addEdge(h1, h2, x.second);
+			}
+			if (runagain) {
+				return false;
 			}
 		}
 
-		if (runagain) {
-			return false;
+		Graph g(n);
+		for (auto &x : map) {
+			const string &key = x.first;
+			uint32_t h1 = hf1.hash(key) % n;
+			uint32_t h2 = hf2.hash(key) % n;
+			g.addEdge(h1, h2, x.second);
 		}
 
 		BFS bfs;

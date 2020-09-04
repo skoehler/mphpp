@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <iomanip>
 #include <climits>
+#include <filesystem>
 
 #include <json/json.h>
 
@@ -17,6 +18,9 @@
 #include "hashtools.hpp"
 #include "algo_chm.hpp"
 #include "algo_bmz.hpp"
+#include "algo_bdz3.hpp"
+#include "algo_bdz2.hpp"
+#include "graph3.hpp"
 
 using std::size_t;
 using std::uint32_t;
@@ -106,6 +110,9 @@ void testIsPrime(R &randgen) {
 
 void loadJSON(map_t &map, string filename) {
 	std::ifstream input(filename);
+	if (input.fail()) {
+		throw std::runtime_error("failed to open file");
+	}
 
 	Json::Value root;
 	input >> root;
@@ -177,15 +184,18 @@ int main(int argc, char **argv) {
 //	testFastMod();
 //	testIsPrime(randgen);
 
+	std::cout << std::filesystem::current_path() << std::endl;
+
 	unordered_map<string, edge_t> map;
 	loadJSON(map, "tests/words-google-10000-english.json");
-//	loadJSON(map, "tests/words-linux.json");
-//	loadJSON(map, "tests/words-utf16.json");
-//	loadJSON(map, "tests/words-small.json");
-//	loadJSON(map, "tests/words-small0.json");
-//	loadJSON(map, "tests/words-small1.json");
-//	loadJSON(map, "tests/words-small2.json");
-//	loadJSON(map, "tests/words-small3.json");
+	// loadJSON(map, "tests/words-linux.json");
+	// loadJSON(map, "tests/words-utf16.json");
+	// loadJSON(map, "tests/words-small.json");
+	// loadJSON(map, "tests/words-small0.json");
+	// loadJSON(map, "tests/words-small1.json");
+	// loadJSON(map, "tests/words-small2.json");
+	// loadJSON(map, "tests/words-small3.json");
+	// loadJSON(map, "tests/words-small10.json");
 
 	//TODO zero characters in strings should not be allowed
 
@@ -199,15 +209,14 @@ int main(int argc, char **argv) {
 	std::cout << "minlen = " << minlen << " and maxlen = " << maxlen << std::endl;
 
 	size_t m = map.size();
-	uint64_t min = m;
-	if (min < 2) {
-		min = 2;
-	}
+	uint64_t min = 2;
 
-	size_t trials = 100;
+	size_t trials = 1000;
 
-//	AlgoCHM algo;
-	AlgoBMZ algo;
+	// AlgoCHM algo;
+	// AlgoBMZ algo;
+	AlgoBDZ2 algo;
+	// AlgoBDZ3 algo;
 
 	double fi = algo.factor_init();
 	double f = algo.factor_inc();
@@ -232,6 +241,8 @@ int main(int argc, char **argv) {
 		if (algo.run(randgen, map, maxlen, ni32, trials)) {
 			break;
 		}
+		// std::cout << "failed" << std::endl;
+		// return 1;
 	}
 	return 0;
 }
