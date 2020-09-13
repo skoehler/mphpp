@@ -5,18 +5,11 @@
 #include <deque>
 
 #include "randtools.hpp"
-#include "unionfind2.hpp"
+#include "unionfind.hpp"
 #include "graph3.hpp"
-#include "bfs.hpp"
 #include "algo.hpp"
 
 /* Idea:
- * keep track of connected components with union find
- * keep track of nodes with degree 1 in each connected component
- * => if the number drops to zero, the graph is not acyclic?
- * => if the number never drops to uero, the graph is acyclic!
- *
- * Idea:
  * For each value of the 3 hash functions we need to store pairs of bits (values 0 to 3).
  * Instead of having one 32 bit integer value with 16 bit pairs,
  * we split 32 bit pairs as store them as two 32 bit integers.
@@ -24,7 +17,7 @@
  * For that, we need to check how many times the value 3 occurs.
  * That can be done by ANDing both 32 bit numbers and checking for 1 bits (popcount).
  *
- * for 10000 words:
+ * Space for 10000 words:
  * 4049 * 3 * (2/8 + 2/32) = 3795.9375 bytes
  */
 
@@ -79,9 +72,9 @@ public:
 
 	bool run(randgen_t &randgen, const map_t &map,
 			size_t maxlen, uint32_t n, size_t trials) {
+		(void)maxlen;
 
 		Graph3 g(3*n, map.size());
-		// UnionFind2 uf(3*n);
 
 		RandConst rsC0(0);
 		RandConst rsC1(1);
@@ -110,7 +103,6 @@ public:
 			hf1.randomize();
 			hf2.randomize();
 			hf3.randomize();
-			// uf.clear();
 			g.clear();
 
 			runagain = false;
@@ -119,23 +111,7 @@ public:
 				uint32_t h1 = hf1.hash(key) % n + 0 * n;
 				uint32_t h2 = hf2.hash(key) % n + 1 * n;
 				uint32_t h3 = hf3.hash(key) % n + 2 * n;
-
-				// size_t d1 = g.degree(h1);
-				// size_t d2 = g.degree(h2);
-				// size_t d3 = g.degree(h3);
-				// size_t a = (d1 == 0 ? 1:0) + (d2 == 0 ? 1:0) + (d3 == 0 ? 1:0);
-				// size_t s = (d1 == 1 ? 1:0) + (d2 == 1 ? 1:0) + (d3 == 1 ? 1:0);
-				// uf.doUnion(h1, h2);
-				// uf.doUnion(h1, h3);
-				// size_t c = uf.adjustValue(h1, a, s);
-				// if (c == 0) {
-				// 	//TODO this almost never triggers, remove?
-				// 	std::cout << "UF found cycle" << std::endl;
-				// 	runagain = true;
-				// 	break;
-				// }
-				// // std::cout << "adding (" << h1 << " " << h2 << " " << h3 << ") count " << c << std::endl;
-
+				// std::cout << "adding (" << h1 << " " << h2 << " " << h3 << ")" << std::endl;
 				g.addEdge(h1, h2, h3);
 			}
 

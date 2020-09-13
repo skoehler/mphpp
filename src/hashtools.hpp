@@ -34,6 +34,7 @@ public:
 	}
 
 	uint32_t preprocess(size_t i, char c) override {
+		(void)i;
 		return (unsigned char)c;
 	}
 

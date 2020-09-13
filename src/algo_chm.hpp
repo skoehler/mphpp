@@ -9,6 +9,13 @@
 #include "bfs.hpp"
 #include "algo.hpp"
 
+/* Idea:
+ * keep track of connected components with union find detect cycles
+ *
+ * Space for 10000 words:
+ * 18743 * 2 = 37486 bytes
+ */
+
 class AlgoCHM {
 private:
 	using string = std::string;

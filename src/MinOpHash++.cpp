@@ -18,8 +18,9 @@
 #include "hashtools.hpp"
 #include "algo_chm.hpp"
 #include "algo_bmz.hpp"
-#include "algo_bdz3.hpp"
 #include "algo_bdz2.hpp"
+#include "algo_bdz3.hpp"
+#include "algo_chd.hpp"
 #include "graph3.hpp"
 
 using std::size_t;
@@ -195,6 +196,7 @@ int main(int argc, char **argv) {
 	// loadJSON(map, "tests/words-small1.json");
 	// loadJSON(map, "tests/words-small2.json");
 	// loadJSON(map, "tests/words-small3.json");
+	// loadJSON(map, "tests/words-small5.json");
 	// loadJSON(map, "tests/words-small10.json");
 
 	//TODO zero characters in strings should not be allowed
@@ -217,6 +219,7 @@ int main(int argc, char **argv) {
 	// AlgoBMZ algo;
 	AlgoBDZ2 algo;
 	// AlgoBDZ3 algo;
+	// AlgoCHD algo;
 
 	double fi = algo.factor_init();
 	double f = algo.factor_inc();
